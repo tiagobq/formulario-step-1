@@ -6,6 +6,8 @@ const $stepThree = $('.step.three');
 
 const $containerBtnFormOne = $('#containerBtnFormOne');
 const $btnFormOne = $('#btnFormOne');
+const $containerBtnFormTwo = $('#containerBtnFormTwo');
+const $btnFormTwo = $('#btnFormTwo');
 const $inputNome = $('#nome');
 const $inputSobrenome = $('#sobrenome');
 const $inputDataNascimento = $('#dataNascimento');
@@ -25,8 +27,9 @@ let cidadeValida = false;
 let cepValido = false;
 
 const minLengthText = 2;
-
+const minLengthTextArea = 10;
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ ;
+const cepRegex = /^([\d]{2})([\d]{3})([\d]{3})|^[\d]{2}.[\d]{3}-[\d]{3}/ ;
 
 function validarInput(element, minLength, maxLength, regex) {
 const closest = $(element).closest('.input-data');
@@ -61,12 +64,36 @@ const closest = $(element).closest('.input-data');
         $stepTwo.show();
 
         $inputEndereco.keyup(function(){
-            enderecoValido = validarInput(this, minLengthText);
+            enderecoValido = validarInput(this, minLengthTextArea);
+            validarFormularioDois();
         });
 
         $inputCidade.keyup(function(){
             cidadeValida = validarInput(this, minLengthText);
+            validarFormularioDois();
         });
+
+        $inputCep.keyup(function(){
+            this.value = this.value.replace(/\D/g,'');
+            cepValido = validarInput(this, null, null, cepRegex);
+            if(cepValido){
+                this.value = this.value.replace(cepRegex, "$1.$2-$3");
+            }
+            validarFormularioDois();
+        })
+
+        $inputComplemento.keyup(function(){
+            validarFormularioDois();
+    })
+}
+    function validarFormularioDois(){
+        if(enderecoValido && cidadeValida && cepValido){
+            $containerBtnFormTwo.removeClass('disabled');
+            $btnFormTwo.removeClass('disabled');
+        }else{
+            $containerBtnFormTwo.addClass('disabled');
+            $btnFormTwo.addClass('disabled');
+        }
     }
 
 function init(){
