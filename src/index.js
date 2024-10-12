@@ -135,7 +135,7 @@ const closest = $(element).closest('.input-data');
             const habilidades = $inputHabilidades.val();
             const pontosForte = $inputPontosForte.val();
 
-            if(!nome || !sobrenome || !email ||dataNascimento
+            if(!nome || !sobrenome || !email ||!dataNascimento
                 || !endereco || !cidade || !cep || !habilidades
                 || !pontosForte){
                     return alert('Favor preencher todos os dados obrigatórios para seguir.');
