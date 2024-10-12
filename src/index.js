@@ -3,11 +3,13 @@ const $stepDescription = $('#step-description');
 const $stepOne = $('.step.one');
 const $stepTwo = $('.step.two');
 const $stepThree = $('.step.three');
-
+const $title = $('#title');
 const $containerBtnFormOne = $('#containerBtnFormOne');
 const $btnFormOne = $('#btnFormOne');
 const $containerBtnFormTwo = $('#containerBtnFormTwo');
 const $btnFormTwo = $('#btnFormTwo');
+const $containerBtnFormThree = $('#containerBtnFormThree');
+const $btnFormThree = $('#btnFormThree');
 const $inputNome = $('#nome');
 const $inputSobrenome = $('#sobrenome');
 const $inputDataNascimento = $('#dataNascimento');
@@ -17,6 +19,8 @@ const $inputEndereco = $('#endereco');
 const $inputComplemento = $('#complemento');
 const $inputCidade = $('#cidade');
 const $inputCep = $('#cep');
+const $inputHabilidades = $('#habilidades');
+const $inputPontosForte = $('#pontosForte');
 
 let nomeValido = false;
 let sobrenomeValido = false;
@@ -25,6 +29,8 @@ let emailValido = false;
 let enderecoValido = false;
 let cidadeValida = false;
 let cepValido = false;
+let habilidadesValido = false;
+let $pontosForteValido = false;
 
 const minLengthText = 2;
 const minLengthTextArea = 10;
@@ -90,10 +96,107 @@ const closest = $(element).closest('.input-data');
         if(enderecoValido && cidadeValida && cepValido){
             $containerBtnFormTwo.removeClass('disabled');
             $btnFormTwo.removeClass('disabled');
+            $btnFormTwo.off('click').on('click', iniciarFormulario3);
         }else{
             $containerBtnFormTwo.addClass('disabled');
             $btnFormTwo.addClass('disabled');
+            $btnFormTwo.off('click');
         }
+    }
+
+    function iniciarFormulario3(){
+        $stepText.text('Passo 3 de 3 - Fale sobre você');
+        $stepDescription.text('Para que possamos filtrar melhor você no processo, conte-nos mais sobre suas habilidades e pontos fortes.');
+        $stepTwo.hide();
+        $stepThree.show();
+
+        $inputHabilidades.keyup(function(){
+            habilidadesValido = validarInput(this, minLengthTextArea);
+            validarFormularioTres();
+        });
+
+        $inputPontosForte.keyup(function(){
+            $pontosForteValido = validarInput(this, minLengthTextArea);
+            validarFormularioTres();
+        });
+    }
+
+    async function salvarNoTrello(){
+        try{
+            const nome = $inputNome.val();
+            const sobrenome = $inputSobrenome.val();
+            const email = $inputEmail.val();
+            const dataNascimento = $inputDataNascimento.val();
+            const minibio = $inputMiniBio.val();
+            const endereco = $inputEndereco.val();
+            const complemento = $inputComplemento.val();
+            const cidade = $inputCidade.val();
+            const cep = $inputCep.val();
+            const habilidades = $inputHabilidades.val();
+            const pontosForte = $inputPontosForte.val();
+
+            if(!nome || !sobrenome || !email ||dataNascimento
+                || !endereco || !cidade || !cep || !habilidades
+                || !pontosForte){
+                    return alert('Favor preencher todos os dados obrigatórios para seguir.');
+                }
+
+                const body = {
+                    name: "Candidato - " + nome + " " + sobrenome,
+                    desc: `
+                        Seguem dados do candidato(a):
+
+                        ----------------- Dados pessoais ------------
+                        Nome: ${nome}
+                        Sobrenome: ${sobrenome}
+                        Email: ${email}
+                        Data de nascimento: ${dataNascimento}
+                        MiniBio: ${minibio}
+
+                         ----------------- Dados de endereço ------------
+                        Endereço: ${endereco}
+                        Complemento: ${complemento}
+                        Cidade: ${cidade}
+                        Cep: ${cep}
+
+                        ----------------- Dados do candidato ------------
+                        Habilidades: ${habilidades}
+                        Pontos Fortes: ${pontosForte}
+
+                    `
+                }
+
+                await fetch('https://api.trello.com/1/cards?idList=66fb3f5d930fdf64e882a161&key=78cebfb42f575b1f7754ad6d6c117a25&token=ATTA6061cef3edd0c5442ba86a6ac3759eef7d146d93eba57b507fa0790f7495176c1C50EC2D', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                });
+        
+                return finalizarFormulario();
+        }catch(e){
+            console.log('Ocorreu erro ao salvar no Trello:', e);
+        }
+    }
+
+    function validarFormularioTres(){
+        if(habilidadesValido && $pontosForteValido){
+            $containerBtnFormThree.removeClass('disabled');
+            $btnFormThree.removeClass('disabled');
+            $btnFormThree.off('click').on('click', salvarNoTrello);
+        }else{
+            $containerBtnFormThree.addClass('disabled');
+            $btnFormThree.addClass('disabled');
+            $btnFormThree.off('click');
+        }
+    }
+
+    function finalizarFormulario(){
+        $stepThree.hide();
+        $stepDescription.hide();
+        $title.text('Inscrição realizada com sucesso!');
+        $stepText.text('Agradecemos sua inscrição, entraremos em contato assim que possível, nosso prazo de análise é de cinco dias úteis!');
     }
 
 function init(){
