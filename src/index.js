@@ -201,7 +201,7 @@ const closest = $(element).closest('.input-data');
 
 function init(){
     $stepText.text('Passo 1 de 3 - Dados pessoais')
-    $stepDescription.text('Descreva seus dados para que possamos te conhecer melhor')
+    $stepDescription.text('Preencha os seus dados para completar a inscrição')
     $stepTwo.hide();
     $stepThree.hide();
 
