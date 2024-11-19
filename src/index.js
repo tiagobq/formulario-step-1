@@ -106,7 +106,7 @@ const closest = $(element).closest('.input-data');
 
     function iniciarFormulario3(){
         $stepText.text('Passo 3 de 3 - Fale sobre você');
-        $stepDescription.text('Para que possamos filtrar melhor você no processo, conte-nos mais sobre suas habilidades e pontos fortes.');
+        $stepDescription.text('Favor preencher os seus dados acadêmicos, será um critério eliminatório posteriormente.');
         $stepTwo.hide();
         $stepThree.show();
 
@@ -160,8 +160,8 @@ const closest = $(element).closest('.input-data');
                         Cep: ${cep}
 
                         ----------------- Dados do candidato ------------
-                        Habilidades: ${habilidades}
-                        Pontos Fortes: ${pontosForte}
+                        Formação acadêmica: ${habilidades}
+                        Sua prova será nível médio ou superior? ${pontosForte}
 
                     `
                 }
@@ -196,7 +196,7 @@ const closest = $(element).closest('.input-data');
         $stepThree.hide();
         $stepDescription.hide();
         $title.text('Inscrição realizada com sucesso!');
-        $stepText.text('Agradecemos sua inscrição, entraremos em contato assim que possível, nosso prazo de análise é de cinco dias úteis!');
+        $stepText.text('Agradecemos sua inscrição, fique atento aos próximos passos e boa sorte na prova!');
     }
 
 function init(){
